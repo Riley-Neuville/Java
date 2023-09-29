@@ -1,3 +1,4 @@
+import com.sun.jdi.Value;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -5,6 +6,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -75,7 +77,7 @@ public class JobData {
 
             String aValue = row.get(column);
 
-            if (aValue.contains(value)) {
+            if (aValue.toLowerCase().contains(value.toLowerCase())) {
                 jobs.add(row);
             }
         }
@@ -94,8 +96,17 @@ public class JobData {
         // load data, if not already loaded
         loadData();
 
-        // TODO - implement this method
-        return null;
+        ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
+
+        for (HashMap<String, String> row : allJobs) {
+            String aValue = row.get("position type") + row.get("name") + row.get("employer") + row.get("location") + row.get("core competency");
+            if (aValue.toLowerCase().contains(value.toLowerCase())) {
+                jobs.add(row);
+                continue;
+            }
+        }
+
+        return jobs;
     }
 
     /**
